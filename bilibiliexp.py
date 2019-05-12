@@ -5,7 +5,6 @@ import MySQLdb,requests,json
 from apscheduler.schedulers.blocking import BlockingScheduler
 import myapi
 from accountclass import bilibili
-import myproxy
 import time
 import re
 import sys
@@ -251,6 +250,7 @@ def main():
     db = connectdb()    # 连接MySQL数据库
     #createtable(db) #建立表
     #insertdb(db,ID,Password,type)    #向数据库中插入账号
+    task_begin(db)
     scheduler = BlockingScheduler()
     scheduler.add_job(everyday_set, 'cron', hour=0, minute=2,args=[db])
     scheduler.add_job(heart_beat, 'cron', minute='*/5', args=[db])

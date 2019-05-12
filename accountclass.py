@@ -106,7 +106,7 @@ class bilibili:
 
 	#直播区签到
 	def sign(self):
-		response = json.loads(requests.post("https://api.live.bilibili.com/sign/doSign",cookies=self.cookie).text)
+		response = json.loads(requests.get("https://api.live.bilibili.com/sign/doSign",cookies=self.cookie).text)
 		if response['code'] == 0:
 		    return True
 		else:
@@ -258,17 +258,28 @@ class bilibili:
 
 	#网页端直播心跳
 	def heart_web(self,room_id):
+		data = {'room_id': room_id,
+				'csrf_token': self.cookie['bili_jct']}
+		data['sign']=myapi.getSign(data)
 		url="https://api.live.bilibili.com/User/userOnlineHeart"
-		data = {'room_id': room_id}
 		response = json.loads(requests.post(url,data = data,cookies = self.cookie).text)
-		print("["+time.asctime(time.localtime(time.time()))+"]\theart_web")
+		if response['code'] == 0:
+			print("["+time.asctime(time.localtime(time.time()))+"]\tHeart_web")
+		else:
+			print("["+time.asctime(time.localtime(time.time()))+"]\tHeart_web Error!!!")
 
 	#手机端直播心跳
 	def heart_mobile(self,room_id):
 		url="https://api.live.bilibili.com/mobile/userOnlineHeart"
-		data = {'room_id': room_id}
+		data = {'room_id': room_id,
+				'csrf_token': self.cookie['bili_jct']}
+		data['sign']=myapi.getSign(data)
 		response = json.loads(requests.post(url,data = data,cookies = self.cookie).text)
-		print("["+time.asctime(time.localtime(time.time()))+"]\theart_mobile")
+		if response['code'] == 0:
+			print("["+time.asctime(time.localtime(time.time()))+"]\tHeart_mobile")
+		else:
+			print("["+time.asctime(time.localtime(time.time()))+"]\tHeart_mobile Error!!!")
+
 
 	#检测直播区任务
 	def taskinfo_get(self):
